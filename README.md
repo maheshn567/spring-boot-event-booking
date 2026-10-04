@@ -1,3 +1,4 @@
+<img width="960" height="600" alt="turnstile-demo" src="https://github.com/user-attachments/assets/c442592c-c829-4a46-b68b-a0c751fde78b" />
 # Turnstile — Event Booking
 
 A full-stack event booking website: a **Spring Boot** REST API and a **React** frontend.
