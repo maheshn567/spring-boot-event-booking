@@ -1,14 +1,15 @@
-
-
-https://github.com/user-attachments/assets/f5f20f02-59c3-47ed-917b-22fc168006c3
-
-
 # Turnstile — Event Booking
 
 A full-stack event booking website: a **Spring Boot** REST API and a **React** frontend.
 Admins (organizers) create and manage events; users sign up, book tickets and cancel them.
 
 The interesting part: **tickets can't be oversold**, even when many people try to book the last seat at the same moment. A test proves it.
+
+## Demo
+
+https://github.com/user-attachments/assets/f5f20f02-59c3-47ed-917b-22fc168006c3
+
+*Public website on `localhost:5173`: browse, sign up and book. Organizer console on `admin.localhost:5173`: dashboard, publish an event, all bookings.*
 
 ## Features
 
