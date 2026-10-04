@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,13 +64,26 @@ public class BookingService {
     }
 
     @Transactional(readOnly = true)
-    public BookingResponse getById(UUID bookingId, UserDetails currentUser) {
-        return BookingResponse.from(findOwnedBooking(bookingId, currentUser));
+    public BookingResponse getById(UUID bookingId, String email) {
+        return BookingResponse.from(findOwnedBooking(bookingId, email));
     }
 
     @Transactional
-    public BookingResponse cancel(UUID bookingId, UserDetails currentUser) {
-        BookingModel booking = findOwnedBooking(bookingId, currentUser);
+    public BookingResponse cancel(UUID bookingId, String email) {
+        return applyCancel(findOwnedBooking(bookingId, email));
+    }
+
+    // Organizer console: cancel anyone's booking
+    @Transactional
+    public BookingResponse cancelAsAdmin(UUID bookingId) {
+        BookingModel booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+        return applyCancel(booking);
+    }
+
+    // ── helpers ───────────────────────────────────────────────────
+
+    private BookingResponse applyCancel(BookingModel booking) {
         EventModel event = booking.getEvent();
 
         if (booking.getStatus() == BookingModel.Status.CANCELLED) {
@@ -87,23 +99,17 @@ public class BookingService {
         return BookingResponse.from(booking); // managed entities → saved on commit
     }
 
-    // ── helpers ───────────────────────────────────────────────────
-
     private UserModel findUser(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
-    // Owner or ADMIN only
-    private BookingModel findOwnedBooking(UUID bookingId, UserDetails currentUser) {
+    // Owner only (admins use cancelAsAdmin)
+    private BookingModel findOwnedBooking(UUID bookingId, String email) {
         BookingModel booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
-        boolean isOwner = booking.getUser().getEmail().equals(currentUser.getUsername());
-        boolean isAdmin = currentUser.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
-        if (!isOwner && !isAdmin) {
+        if (!booking.getUser().getEmail().equals(email)) {
             throw new AccessDeniedException("Not your booking");
         }
         return booking;

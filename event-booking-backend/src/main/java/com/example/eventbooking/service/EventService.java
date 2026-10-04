@@ -94,6 +94,7 @@ public class EventService {
     private void applyRequest(EventModel event, EventRequest request) {
         event.setTitle(request.title().trim());
         event.setDescription(request.description());
+        event.setCategory(request.category());
         event.setLocation(request.location().trim());
         event.setEventDate(request.eventDate());
         event.setTotalTickets(request.totalTickets());
