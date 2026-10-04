@@ -35,6 +35,10 @@ public class EventModel {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    // Nullable in the DB so existing rows survive ddl-auto=update; required in EventRequest
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
     @NotBlank
     @Column(nullable = false)
     private String location;
@@ -73,6 +77,10 @@ public class EventModel {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public enum Category {
+        CONCERT, MEETUP, WORKSHOP, COMEDY, TALK
     }
 
     // Helper: how many tickets are still available

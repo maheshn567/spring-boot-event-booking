@@ -10,9 +10,11 @@ public record EventResponse(
         UUID id,
         String title,
         String description,
+        EventModel.Category category,
         String location,
         LocalDateTime eventDate,
         int totalTickets,
+        int bookedTickets,
         int availableTickets,
         BigDecimal price
 ) {
@@ -21,9 +23,11 @@ public record EventResponse(
                 event.getId(),
                 event.getTitle(),
                 event.getDescription(),
+                event.getCategory(),
                 event.getLocation(),
                 event.getEventDate(),
                 event.getTotalTickets(),
+                event.getBookedTickets(),
                 event.getAvailableTickets(),
                 event.getPrice()
         );

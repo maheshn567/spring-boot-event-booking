@@ -41,11 +41,11 @@ public class BookingController {
 
     @GetMapping("/{id}")
     public BookingResponse getById(@PathVariable UUID id, @AuthenticationPrincipal UserDetails user) {
-        return bookingService.getById(id, user);
+        return bookingService.getById(id, user.getUsername());
     }
 
     @PatchMapping("/{id}/cancel")
     public BookingResponse cancel(@PathVariable UUID id, @AuthenticationPrincipal UserDetails user) {
-        return bookingService.cancel(id, user);
+        return bookingService.cancel(id, user.getUsername());
     }
 }

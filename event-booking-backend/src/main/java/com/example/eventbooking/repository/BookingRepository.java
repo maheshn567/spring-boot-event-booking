@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public interface BookingRepository extends JpaRepository<BookingModel, UUID> {
@@ -20,4 +22,14 @@ public interface BookingRepository extends JpaRepository<BookingModel, UUID> {
                                           BookingModel.Status status);
 
     boolean existsByEvent(EventModel event);
+
+    // Admin list: every booking with its event and user in one query
+    @Override
+    @EntityGraph(attributePaths = {"event", "user"})
+    Page<BookingModel> findAll(Pageable pageable);
+
+    long countByStatus(BookingModel.Status status);
+
+    @Query("select coalesce(sum(b.event.price), 0) from BookingModel b where b.status = :status")
+    BigDecimal sumPriceByStatus(BookingModel.Status status);
 }
