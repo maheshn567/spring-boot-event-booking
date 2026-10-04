@@ -5,10 +5,6 @@ Admins (organizers) create and manage events; users sign up, book tickets and ca
 
 The interesting part: **tickets can't be oversold**, even when many people try to book the last seat at the same moment. A test proves it.
 
-![Demo: browsing events, signing up and booking on the public site, then publishing an event in the organizer console](docs/demo.gif)
-
-*Public site at `localhost:5173`, organizer console at `admin.localhost:5173`. [Watch the MP4](docs/demo.mp4) for full quality.*
-
 ## Features
 
 - **JWT authentication** — register, log in, send `Authorization: Bearer <token>`
